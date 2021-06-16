@@ -582,7 +582,7 @@ export default class GameReader {
 
 		this.writeString(
 			shellCodeAddr + 0xd5,
-			'Ping: {0}ms\n<color=#BA68C8>BetterCrewLink</color>\n<size=60%><color=#BA68C8>https://bettercrewlink.app</color></size>'
+			'Ping: {0}ms' // removed annoying URL: \n<color=#BA68C8>BetterCrewLink</color>\n<size=60%><color=#BA68C8>https://bettercrewlink.app</color></size>'
 		);
 
 		writeBuffer(this.amongUs!.handle, shellCodeAddr, Buffer.from(shellcode));

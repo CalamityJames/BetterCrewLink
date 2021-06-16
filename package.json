@@ -5,7 +5,7 @@
 	"description": "Free, open, Among Us proximity voice chat",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/OhMyGuus/BetterCrewLink.git"
+		"url": "https://github.com/CalamityJames/BetterCrewLink.git"
 	},
 	"funding": {
 		"type": "individual",
@@ -14,7 +14,7 @@
 	"author": {
 		"name": "OhMyGuus",
 		"email": "info@guus.ninja",
-		"url": "https://bettercrewlink.app"
+		"url": "https://github.com/CalamityJames/BetterCrewLink/releases"
 	},
 	"scripts": {
 		"postinstall": "electron-builder install-app-deps",
