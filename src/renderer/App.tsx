@@ -78,7 +78,7 @@ const TitleBar: React.FC<TitleBarProps> = function ({ settingsOpen, setSettingsO
 	return (
 		<div className={classes.root}>
 			<span className={classes.title} style={{ marginLeft: 10 }}>
-				BetterCrewLink{appVersion}
+				CJBetterCrewLink{appVersion}
 			</span>
 			<IconButton
 				className={classes.button}
