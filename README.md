@@ -6,20 +6,16 @@
   <br/>
   <sub>Logo made by <a href="https://github.com/SirBuvex">SirBuvex</a></sub>
 </p>
-<h3 align="center"><a href="https://github.com/OhMyGuus/BetterCrewLink">BetterCrewLink</a> a <a href="https://github.com/ottomated/CrewLink">CrewLink</a> fork with extra features & better support</h3>
+<h3 align="center"><a href="https://github.com/CalamityJames/BetterCrewLink">"CJBetterCrewLink"</a> a <a href="https://github.com/OhMyGuus/BetterCrewLink">BetterCrewLink</a> fork of <a href="https://github.com/ottomated/CrewLink">CrewLink</a> with extra features & better support (and without annoying URL)</h3>
 
 
   <p align="center">
     Free, open, Among Us proximity voice chat.
     <br />
-    <a href="https://github.com/OhMyGuus/BetterCrewLink/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/OhMyGuus/BetterCrewLink/issues">Request Feature</a>
-    ·
     <a href="#installation">Installation Instructions</a>
   </p>
   <p align="center">
-    <b><a href="#donate">Donate to BetterCrewLink</a></b></br>
+    <b><a href="#donate">Donate to BetterCrewLink (OhMyGuus)</a></b></br>
   (all donations will be used for the apple developer license and extra servers)</br>
    <b><a href="https://paypal.me/ottomated">Donate to ottomated (official CrewLink)</a></b>
   </p>
@@ -28,18 +24,17 @@
 
 <p>
 <p align="center">
-    <a href="https://github.com/OhMyGuus/BetterCrewLink/releases/"><img src="https://img.shields.io/github/downloads/OhMyGuus/BetterCrewLink/total?logo=GitHub&label=Downloads" alt="GitHub Downloads"></img></a>
-    <a href="https://github.com/OhMyGuus/BetterCrewLink/releases/latest/"><img src="https://img.shields.io/github/downloads/OhMyGuus/BetterCrewLink/latest/total?label=Downloads%20%28latest%20release%29&logo=GitHub" alt="GitHub Downloads Latest Release"></img></a>
-    <a href="https://github.com/OhMyGuus/BetterCrewLink/releases/latest/"><img src="https://img.shields.io/github/v/release/OhMyGuus/BetterCrewLink?logo=GitHub&color=success&label=Latest%20Release" alt="GitHub Latest Release"></img></a>
-    <a href="https://github.com/OhMyGuus/BetterCrewLink/releases/latest/"><img src="https://img.shields.io/github/release-date/OhMyGuus/BetterCrewLink?label=Released&logo=GitHub" alt="GitHub Latest Release Date"></img></a>
-    <a href="https://github.com/OhMyGuus/BetterCrewLink/blob/nightly/LICENSE"><img src="https://img.shields.io/github/license/OhMyGuus/BetterCrewLink?label=License" alt="GPL-3.0 License"></img></a>
-    <a href="https://github.com/OhMyGuus/BetterCrewLink/actions"><img src="https://img.shields.io/github/workflow/status/OhMyGuus/BetterCrewLink/BetterCrewLink%20Build%20(CI)?label=Build%20%28CI%29&logo=GitHub" alt="GitHub Actions Build"></img></a>
+    <a href="https://github.com/CalamityJames/BetterCrewLink/releases/"><img src="https://img.shields.io/github/downloads/CalamityJames/BetterCrewLink/total?logo=GitHub&label=Downloads" alt="GitHub Downloads"></img></a>
+    <a href="https://github.com/CalamityJames/BetterCrewLink/releases/latest/"><img src="https://img.shields.io/github/downloads/CalamityJames/BetterCrewLink/latest/total?label=Downloads%20%28latest%20release%29&logo=GitHub" alt="GitHub Downloads Latest Release"></img></a>
+    <a href="https://github.com/CalamityJames/BetterCrewLink/releases/latest/"><img src="https://img.shields.io/github/v/release/CalamityJames/BetterCrewLink?logo=GitHub&color=success&label=Latest%20Release" alt="GitHub Latest Release"></img></a>
+    <a href="https://github.com/CalamityJames/BetterCrewLink/releases/latest/"><img src="https://img.shields.io/github/release-date/CalamityJames/BetterCrewLink?label=Released&logo=GitHub" alt="GitHub Latest Release Date"></img></a>
+    <a href="https://github.com/CalamityJames/BetterCrewLink/blob/nightly/LICENSE"><img src="https://img.shields.io/github/license/CalamityJames/BetterCrewLink?label=License" alt="GPL-3.0 License"></img></a>
+    <a href="https://github.com/CalamityJames/BetterCrewLink/actions"><img src="https://img.shields.io/github/workflow/status/CalamityJames/BetterCrewLink/BetterCrewLink%20Build%20(CI)?label=Build%20%28CI%29&logo=GitHub" alt="GitHub Actions Build"></img></a>
     <a href="https://matadorprobr.github.io/BetterCrewLink-status/history/better-crew-link-voice-server"><img src="https://img.shields.io/website?down_message=Offline&label=Status&up_message=Online&url=https%3A%2F%2Fbettercrewl.ink%2F" alt="BetterCrewLink Voice Server Status"></img></a>
     <a href="https://matadorprobr.github.io/BetterCrewLink-status/history/better-crew-link-voice-server"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/MatadorProBr/BetterCrewLink-status/master/api/better-crew-link-voice-server/uptime.json&label=Uptime" alt="BetterCrewLink Voice Server Uptime"></img></a>
     <a href="https://www.paypal.com/donate?hosted_button_id=KS43BDTGN76JQ"><img src="https://img.shields.io/badge/Support-BetterCrewLink-purple?logo=PayPal" alt="Support BetterCrewLink (PayPal)"></img></a>
     <a href="https://ko-fi.com/ohmyguus"><img src="https://img.shields.io/badge/Support-BetterCrewLink-purple?logo=Ko-fi&logoColor=white" alt="Support BetterCrewLink (Ko-fi)"></img></a>
-    <a href="https://discord.gg/qDqTzvj4SH"><img src="https://img.shields.io/discord/791516611143270410?color=cornflowerblue&label=Discord&logo=Discord&logoColor=white" alt="Discord Server"></img></a>
-    <a href="https://github.com/OhMyGuus/BetterCrewLink/graphs/contributors"><img src="https://img.shields.io/github/contributors/OhMyGuus/BetterCrewLink?label=Contributors&logo=GitHub" alt="GitHub Contributors"></img></a>
+    <a href="https://github.com/CalamityJames/BetterCrewLink/graphs/contributors"><img src="https://img.shields.io/github/contributors/CalamityJames/BetterCrewLink?label=Contributors&logo=GitHub" alt="GitHub Contributors"></img></a>
     <a href="https://crwd.in/bettercrewlink"><img src="https://badges.crowdin.net/bettercrewlink/localized.svg" alt="Translations"></img></a>
 </p>
 <hr />
@@ -60,13 +55,6 @@
 
 - This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.
 
-- To get the most of BetterCrewLink use the Voice Server: <a href="https://bettercrewl.ink">`https://bettercrewl.ink`</a>
-
-<div>
-  <a target="_blank" href="https://discord.gg/qDqTzvj4SH" title="Join our Discord!">
-    <img height="75px" draggable="false" src="https://discordapp.com/api/guilds/791516611143270410/widget.png?style=banner2" alt="Join our Discord!">
-  </a>
-</div>
 
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
@@ -130,9 +118,6 @@ This project implements proximity voice chat in Among Us. Everyone in an Among U
 - Support for Mobile.
 ```
 
-**If I missed something you can join in [Discord server](https://discord.gg/qDqTzvj4SH), [GitHub](https://github.com/OhMyGuus/BetterCrewLink/issues) or DM me on Discord ([ThaGuus#2140](https://discordapp.com/users/508426414387757057)) so I can add it to BetterCrewLink.**
-
-[![Discord Server][discord-shield]][discord-url]
 
 <!-- SUPPORTED PLATAFORMS -->
 ## Supported Plataforms
