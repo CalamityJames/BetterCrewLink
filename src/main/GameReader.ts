@@ -45,7 +45,7 @@ interface PlayerReport {
 	dead: number;
 	taskPtr: number;
 }
-
+// 		const gameState = useContext(GameStateContext);
 export default class GameReader {
 	sendIPC: Electron.WebContents['send'];
 	offsets: IOffsets | undefined;
@@ -61,6 +61,7 @@ export default class GameReader {
 	lastState: AmongUsState = {} as AmongUsState;
 	amongUs: ProcessObject | null = null;
 	gameAssembly: ModuleObject | null = null;
+	localPlayerName = '';
 	colorsInitialized = false;
 	rainbowColor = -9999;
 	gameCode = 'MENU';
@@ -231,6 +232,7 @@ export default class GameReader {
 
 					if (player.isLocal) {
 						localPlayer = player;
+						this.localPlayerName = player.name;
 					}
 
 					players.push(player);
@@ -580,12 +582,10 @@ export default class GameReader {
 		//MMOnline
 		this.writeString(shellCodeAddr + 0x70, 'OnlineGame');
 		this.writeString(shellCodeAddr + 0x95, 'MMOnline');
-
 		this.writeString(
 			shellCodeAddr + 0xd5,
-			'Ping: {0}ms' // removed annoying URL: \n<color=#BA68C8>BetterCrewLink</color>\n<size=60%><color=#BA68C8>https://bettercrewlink.app</color></size>'
+			'Ping: {0}ms'
 		);
-
 		writeBuffer(this.amongUs!.handle, shellCodeAddr, Buffer.from(shellcode));
 		writeBuffer(this.amongUs!.handle, fixedUpdateFunc, Buffer.from(shellcodeJMP));
 		this.shellcodeAddr = shellCodeAddr;
@@ -646,12 +646,36 @@ export default class GameReader {
 			const stringPtr = this.readMemory<number>('int', this.gameAssembly.modBaseAddr, stringOffset);
 			const pingstring = this.readString(stringPtr);
 			if (pingstring.includes('Ping') || pingstring.includes('<color=#BA68C8')) {
+				let addStr = '';
+				if (this.localPlayerName) {
+					addStr = '\n<size=60%>';
+					switch (this.localPlayerName) {
+						case 'Spanposter':
+							addStr += '<color=#BA68C8>I haven\'t been an alien in</color> <color=#FFFF00>ages</color>';
+							break;
+						case 'James':
+							addStr += 'It was a <color=#FFFF00>graphical</color> <color=#FF0000>bug</color>';
+							break;
+						case 'RHS':
+							addStr += "Remember to breathe. <color=#FF0000>Don't ragequit</color>";
+							break;
+						case 'Knuxina':
+							addStr += '<color=#FFFF00>*sigh*</color>';
+							break;
+					}
+					addStr += '</size>'
+				}
+				this.writeString(
+					this.shellcodeAddr + 0xd5,
+					'Ping: {0}ms' + addStr
+				);
 				writeMemory(
 					this.amongUs!.handle,
 					this.gameAssembly!.modBaseAddr + stringOffset,
 					this.shellcodeAddr + 0xd5,
 					'int32'
 				);
+
 				break;
 			}
 		}
