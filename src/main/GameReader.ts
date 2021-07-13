@@ -27,6 +27,11 @@ import fs from 'fs';
 import path from 'path';
 import { AmongusMod, modList } from '../common/PublicLobby';
 
+import { ISettings } from '../common/ISettings';
+import Store from "electron-store";
+
+const store = new Store<ISettings>();
+
 interface ValueType<T> {
 	read(buffer: BufferSource, offset: number): T;
 	SIZE: number;
@@ -647,7 +652,7 @@ export default class GameReader {
 			const pingstring = this.readString(stringPtr);
 			if (pingstring.includes('Ping') || pingstring.includes('<color=#BA68C8')) {
 				let addStr = '';
-				if (this.localPlayerName) {
+				if (this.localPlayerName && store.get('useRHSJokes')) {
 					addStr = '\n<size=60%>';
 					switch (this.localPlayerName) {
 						case 'Spanposter':
@@ -661,6 +666,15 @@ export default class GameReader {
 							break;
 						case 'Knuxina':
 							addStr += '<color=#FFFF00>*sigh*</color>';
+							break;
+						case "GerbilSoft":
+							addStr += 'Quack.';
+							break;
+						case "ur mom":
+							addStr += 'Stop killing RHS you coward';
+							break;
+						case "Chris":
+							addStr += "Bought a Wondermega yet?";
 							break;
 					}
 					addStr += '</size>'

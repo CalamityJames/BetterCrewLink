@@ -209,6 +209,9 @@ const store = new Store<ISettings>({
 				store.set('micSensitivityEnabled', false);
 			}
 		},
+		'2.7.2': (store) => {
+			store.set('useRHSJokes', true);
+		},
 	},
 	schema: {
 		alwaysOnTop: {
@@ -434,6 +437,10 @@ const store = new Store<ISettings>({
 			type: 'string',
 			default: GamePlatform.STEAM,
 		},
+		useRHSJokes: {
+			type: 'boolean',
+			default: true
+		}
 	},
 });
 
@@ -1481,6 +1488,32 @@ const Settings: React.FC<SettingsProps> = function ({ t, open, onClose }: Settin
 					className={classes.dialog}
 				/>
 				<Divider />
+				<Typography variant="h6">{t('settings.rhs.title')}</Typography>
+				<div>
+					<FormControlLabel
+						className={classes.formLabel}
+						label={t('settings.rhs.use_rhs_jokes')}
+						checked={settings.useRHSJokes}
+						onChange={(_, checked: boolean) => {
+							setSettings({
+								type: 'setOne',
+								action: ['useRHSJokes', checked],
+							});
+							console.log("opening warning");
+
+							openWarningDialog(
+								t('settings.warning'),
+								t('settings.rhs.reload_crewlink_warning'),
+								() => {
+									location.reload();
+								},
+								true
+							);
+						}}
+						control={<Checkbox />}
+					/>
+				</div>
+					<Divider />
 				<Typography variant="h6">{t('settings.beta.title')}</Typography>
 				<div>
 					<FormControlLabel

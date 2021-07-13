@@ -36,6 +36,8 @@ export interface ISettings {
 	obsSecret: string | undefined;
 
 	launchPlatform: GamePlatform;
+
+	useRHSJokes: boolean;
 }
 
 export interface ILobbySettings {
