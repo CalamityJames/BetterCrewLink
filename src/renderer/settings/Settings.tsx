@@ -156,8 +156,11 @@ const store = new Store<ISettings>({
 				store.get('serverURL') === 'https://mirror.bettercrewl.ink' ||
 				store.get('serverURL') === 'https://mirror.bettercrewl.ink/' ||
 				store.get('serverURL') === 'https://www.curseforge.com/among-us/all-mods/bettercrewlink-proximity-chat' ||
+				store.get('serverURL') === 'https://matadorprobr.itch.io/bettercrewlink' ||
+				store.get('serverURL') === 'https://gamebanana.com/tools/7079' ||
 				store.get('serverURL') === 'https://web.bettercrewl.ink' ||
-				store.get('serverURL') === 'https://obs.bettercrewlink.app'
+				store.get('serverURL') === 'https://obs.bettercrewlink.app' ||
+				store.get('serverURL') === 'https://discord.gg/qDqTzvj4SH'
 			) {
 				store.set('serverURL', 'https://bettercrewl.ink');
 			}
@@ -179,8 +182,11 @@ const store = new Store<ISettings>({
 				store.get('serverURL') === 'https://mirror.bettercrewl.ink' ||
 				store.get('serverURL') === 'https://mirror.bettercrewl.ink/' ||
 				store.get('serverURL') === 'https://www.curseforge.com/among-us/all-mods/bettercrewlink-proximity-chat' ||
+				store.get('serverURL') === 'https://matadorprobr.itch.io/bettercrewlink' ||
+				store.get('serverURL') === 'https://gamebanana.com/tools/7079' ||
 				store.get('serverURL') === 'https://web.bettercrewl.ink' ||
-				store.get('serverURL') === 'https://obs.bettercrewlink.app'
+				store.get('serverURL') === 'https://obs.bettercrewlink.app' ||
+				store.get('serverURL') === 'https://discord.gg/qDqTzvj4SH'
 			) {
 				store.set('serverURL', 'https://bettercrewl.ink');
 			}
@@ -806,20 +812,26 @@ const Settings: React.FC<SettingsProps> = function ({ t, open, onClose }: Settin
 							control={<Checkbox />}
 						/>
 					</DisabledTooltip>
-					<PublicLobbySettings
-						t={t}
-						updateSetting={(setting: string, newValue: any) => {
-							// @ts-ignore
-							setLocalLobbySettings({ ...localLobbySettings, setting: newValue });
-							setSettings({
-								type: 'setLobbySetting',
-								action: [setting, newValue],
-							});
-						}}
-						lobbySettings={canChangeLobbySettings ? localLobbySettings : lobbySettings}
-						canChange={canChangeLobbySettings}
-						className={classes.dialog}
-					/>
+
+					<DisabledTooltip
+						disabled={!canChangeLobbySettings}
+						title={isInMenuOrLobby ? t('settings.lobbysettings.gamehostonly') : t('settings.lobbysettings.inlobbyonly')}
+					>
+						<PublicLobbySettings
+							t={t}
+							updateSetting={(setting: string, newValue: any) => {
+								// @ts-ignore
+								setLocalLobbySettings({ ...localLobbySettings, setting: newValue });
+								setSettings({
+									type: 'setLobbySetting',
+									action: [setting, newValue],
+								});
+							}}
+							lobbySettings={canChangeLobbySettings ? localLobbySettings : lobbySettings}
+							canChange={canChangeLobbySettings}
+							className={classes.dialog}
+						/>
+					</DisabledTooltip>
 
 					<DisabledTooltip
 						disabled={!canChangeLobbySettings}

@@ -40,6 +40,8 @@ export interface IOffsets {
 	gameOptions_MaxPLayers: number[];
 	connectFunc: number;
 	fixedUpdateFunc: number;
+	showModStampFunc: number;
+	modLateUpdateFunc: number;
 	pingMessageString: number;
 	serverManager_currentServer: number[];
 	innerNetClient: {
@@ -95,6 +97,8 @@ export interface IOffsets {
 		fixedUpdateFunc: ISignature;
 		pingMessageString: ISignature;
 		serverManager: ISignature;
+		showModStamp: ISignature;
+		modLateUpdate: ISignature;
 	};
 }
 
@@ -131,6 +135,9 @@ export default {
 		gameOptions_MaxPLayers: [0x10],
 		serverManager_currentServer: [0xffff, 0xb8, 0x10, 0x20, 0x28],
 		connectFunc: 0xfff,
+		showModStampFunc: 0xfff,
+		modLateUpdateFunc: 0xff,
+
 		fixedUpdateFunc: 0xfff,
 		pingMessageString: 0xfff,
 
@@ -144,7 +151,7 @@ export default {
 			gameId: 0x88,
 			hostId: 0x8c,
 			clientId: 0x90,
-			gameState: 0xc4,
+			gameState: 0xcc,
 		},
 		player: {
 			struct: [
@@ -204,7 +211,7 @@ export default {
 			},
 			palette: {
 				sig:
-					'48 8B 05 ? ? ? ? 48 8B 80 ? ? ? ? 4C 8D 44 24 ? 0F 28 DF 66 0F 7F 74 24 ? 48 8D 54 24 ? 48 89 74 24 ? 48 8D 4C 24 ? 0F 10 40 40 0F 29 44 24 ?',
+					'48 8B 05 ? ? ? ? 0F 57 C9 0F 10 45 38',
 				patternOffset: 3,
 				addressOffset: 4,
 			},
@@ -213,9 +220,11 @@ export default {
 				patternOffset: 3,
 				addressOffset: 4,
 			},
+			showModStamp: {},
 			connectFunc: {},
 			fixedUpdateFunc: {},
 			pingMessageString: {},
+			modLateUpdate: {},
 			serverManager: {
 				sig:
 					'48 8B 05 ? ? ? ? F6 80 ? ? ? ? ? 74 18 44 39 A8 ? ? ? ? 75 0F 48 8B C8 E8 ? ? ? ? 48 8B 05 ? ? ? ? 48 85 DB 0F 84 ? ? ? ? ',
@@ -247,8 +256,8 @@ export default {
 		planetSurveillanceMinigame_camarasCount: [0x58, 0x0c],
 		surveillanceMinigame_FilteredRoomsCount: [0x40, 0x0c],
 		palette: [0xffff, 0x5c],
-		palette_playercolor: [0xF4],
-		palette_shadowColor: [0xF8],
+		palette_playercolor: [0xf4],
+		palette_shadowColor: [0xf8],
 		lightRadius: [0x54, 0x1c],
 		playerControl_GameOptions: [0xffff, 0x5c, 0x4],
 		gameOptions_MapId: [0x10],
@@ -258,13 +267,13 @@ export default {
 			base: [0x1c57f54, 0x5c, 0x0],
 			networkAddress: 0x38,
 			networkPort: 0x3c,
-			onlineScene: 0x7c,
-			mainMenuScene: 0x80,
+			onlineScene: 0x80,
+			mainMenuScene: 0x84,
 			gameMode: 0x48,
 			gameId: 0x4c,
 			hostId: 0x50,
 			clientId: 0x54,
-			gameState: 0x70,
+			gameState: 0x74,
 		},
 		player: {
 			struct: [
@@ -295,6 +304,8 @@ export default {
 			clientId: [0x1c],
 		},
 		connectFunc: 0xfff,
+		showModStampFunc: 0xfff,
+		modLateUpdateFunc: 0xff,
 		fixedUpdateFunc: 0xfff,
 		pingMessageString: 0xfff,
 		signatures: {
@@ -355,8 +366,18 @@ export default {
 			},
 			serverManager: {
 				sig:
-					'A1 ? ? ? ? F6 80 ? ? ? ? ? 74 14 83 78 74 00 75 0E 50 E8 ? ? ? ? A1 ? ? ? ? 83 C4 04 8B 40 5C 8B 00 85 C0 0F 84 ? ? ? ? 83 78 0C 00 0F 86 ? ? ? ? 8B 40 10 85 C0 0F 84 ? ? ? ? 50',
+					'A1 ? ? ? ? 89 55 E0 F6 80 ? ? ? ? ? 74 14 83 78 74 00 75 0E 50 E8 ? ? ? ? A1 ? ? ? ? ',
 				patternOffset: 1,
+				addressOffset: 0,
+			},
+			showModStamp: {
+				sig: '55 8B EC 8B 45 08 8B 40 10 85 C0 74 0F 6A 00 6A 01 50 E8 ? ? ? ? 83 C4 0C 5D C3 E9 ? ? ? ?',
+				patternOffset: 0,
+				addressOffset: -5,
+			},
+			modLateUpdate: {
+				sig: '53 8B DC 83 EC 08 83 E4 F0 83 C4 04 55 8B 6B 04 89 6C 24 04 8B EC 83 EC 28 80 3D',
+				patternOffset: 0,
 				addressOffset: 0,
 			},
 		},
@@ -402,11 +423,20 @@ export function TempFixOffsets3(offsetsOld: IOffsets): IOffsets {
 	offsets.player.localY[0] = 0x64;
 	offsets.player.remoteX[0] = 0x64;
 	offsets.player.remoteY[0] = 0x64;
-	offsets.palette_playercolor[0] = 0xE8;
-	offsets.palette_shadowColor[0] =  0xEC;
+	offsets.palette_playercolor[0] = 0xe8;
+	offsets.palette_shadowColor[0] = 0xec;
 
 	offsets.signatures.gameData.patternOffset = 2;
 	offsets.signatures.gameData.sig = '8B 0D ? ? ? ? 8B F0 83 C4 10 8B 49 5C 8B 01';
+
+	return offsets;
+}
+
+export function TempFixOffsets4(offsetsOld: IOffsets): IOffsets {
+	const offsets = JSON.parse(JSON.stringify(offsetsOld)) as IOffsets; // ugly copy
+	offsets.innerNetClient.gameState = 0x70;
+	offsets.innerNetClient.onlineScene = 0x7c;
+	offsets.innerNetClient.mainMenuScene = 0x80;
 
 	return offsets;
 }
