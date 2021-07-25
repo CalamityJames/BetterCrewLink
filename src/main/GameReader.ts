@@ -739,6 +739,7 @@ export default class GameReader {
 				let addStr = '';
 				if (this.localPlayerName && store.get('useRHSJokes')) {
 					addStr = '\n<size=60%>';
+					let beers = ['Wife Beater', 'Carlsberg', 'Corona', 'Fosters', 'Moretti', 'Peroni', 'Sprite', 'Tea, Earl Grey, Hot.', 'Coke Zero', 'Piss Water'];
 					switch (this.localPlayerName) {
 						case 'Spanposter':
 							addStr += '<color=#BA68C8>I haven\'t been an alien in</color> <color=#FFFF00>ages</color>';
@@ -756,10 +757,19 @@ export default class GameReader {
 							addStr += 'Quack.';
 							break;
 						case "ur mom":
-							addStr += 'Stop killing RHS you coward';
+							addStr += 'People who mess with the lights deserve everything they get';
 							break;
 						case "Chris":
-							addStr += "Bought a Wondermega yet?";
+							addStr += "Bought a Wondermega yet?";s
+							break;
+						case "Giovanni":
+							addStr += 'It\'s still coming home';
+							break;
+						case "Hogeez":
+							addStr += "If you kill James, you lose your <color=#FFE751>Sonic</color> <color=#C31F80>C</color><color=#6EFFFF>o</color><color=#FFFD7D>l</color><color=#A946DE>o</color><color=#57C759>r</color><color=#F3F605>s</color> 100% save file";
+							break;
+						case "Overlord":
+							addStr += 'Tonight\'s drink is: <color=#FF0000>' + beers[beers.length * Math.random() | 0] + '</color>';
 							break;
 					}
 					addStr += '</size>'
