@@ -760,7 +760,7 @@ export default class GameReader {
 							addStr += 'People who mess with the lights deserve everything they get';
 							break;
 						case "Chris":
-							addStr += "Bought a Wondermega yet?";s
+							addStr += "Bought a Wondermega yet?";
 							break;
 						case "Giovanni":
 							addStr += 'It\'s still coming home';
