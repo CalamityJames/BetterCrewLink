@@ -37,6 +37,8 @@ export interface ISettings {
 
 	launchPlatform: GamePlatform | string;
 	customPlatforms: GamePlatformMap;
+
+	useRHSJokes: boolean;
 }
 
 export interface ILobbySettings {

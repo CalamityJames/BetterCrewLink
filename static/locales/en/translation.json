@@ -90,6 +90,11 @@
 				"voice_server_warning": "This option is for advanced users only. Other servers can steal your info or crash BetterCrewLink.",
 				"reset_default": "Reset To Default"
 			},
+			"rhs": {
+				"title": "RHS Specifics",
+				"use_rhs_jokes": "Use RHS Discord in-jokes",
+				"reload_crewlink_warning": "You should reload BCL for this setting to take effect. Reload now?"
+			},
 			"beta": {
 				"title": "BETA/DEBUG",
 				"mobilehost": "Mobile Host",

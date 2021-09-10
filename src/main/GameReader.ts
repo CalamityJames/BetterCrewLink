@@ -26,14 +26,14 @@ import { platform } from 'os';
 import fs from 'fs';
 import path from 'path';
 import { AmongusMod, modList } from '../common/PublicLobby';
-import { app } from 'electron';
 
-let appVersion = '';
-if (process.env.NODE_ENV !== 'production') {
-    appVersion = 'DEV';
-} else {
-    appVersion = app.getVersion();
-}
+// begin: rhs version
+import { ISettings } from '../common/ISettings';
+import Store from "electron-store";
+
+const store = new Store<ISettings>();
+// end: rhs version
+
 
 interface ValueType<T> {
 	read(buffer: BufferSource, offset: number): T;
@@ -69,6 +69,7 @@ export default class GameReader {
 	lastState: AmongUsState = {} as AmongUsState;
 	amongUs: ProcessObject | null = null;
 	gameAssembly: ModuleObject | null = null;
+	localPlayerName = '';
 	colorsInitialized = false;
 	rainbowColor = -9999;
 	gameCode = 'MENU';
@@ -239,6 +240,7 @@ export default class GameReader {
 
 					if (player.isLocal) {
 						localPlayer = player;
+						this.localPlayerName = player.name;
 					}
 
 					players.push(player);
@@ -672,8 +674,8 @@ export default class GameReader {
 
 		this.writeString(
 			shellCodeAddr + 0xd5,
-			`Ping: {0}ms\n<size=85%><color=#BA68C8>BetterCrewLink v${appVersion}</color></size>\n<size=60%><color=#BA68C8>https://bettercrewlink.app</color></size>`
-		);
+			'Ping: {0} ms'
+			);
 
 		writeBuffer(this.amongUs!.handle, shellCodeAddr, Buffer.from(shellcode));
 		writeBuffer(this.amongUs!.handle, fixedUpdateFunc, Buffer.from(shellcodeJMP));
@@ -741,6 +743,48 @@ export default class GameReader {
 			const stringPtr = this.readMemory<number>('int', this.gameAssembly.modBaseAddr, stringOffset);
 			const pingstring = this.readString(stringPtr);
 			if (pingstring.includes('Ping') || pingstring.includes('<color=#BA68C8')) {
+				let addStr = '';
+				if (this.localPlayerName && store.get('useRHSJokes')) {
+					addStr = '\n<size=60%>';
+					let beers = ['Wife Beater', 'Carlsberg', 'Corona', 'Fosters', 'Moretti', 'Peroni', 'Sprite', 'Tea, Earl Grey, Hot.', 'Coke Zero', 'Piss Water'];
+					switch (this.localPlayerName) {
+						case "Overlord":
+							addStr += 'Tonight\'s drink is: <color=#FF0000>' + beers[beers.length * Math.random() | 0] + '</color>';
+							break;
+						case 'Spanposter':
+							addStr += '<color=#BA68C8>I haven\'t been an alien in</color> <color=#FFFF00>ages</color>';
+							break;
+						case 'James':
+							addStr += 'It was a <color=#FFFF00>graphical</color> <color=#FF0000>bug</color>';
+							break;
+						case 'RHS':
+							addStr += "Remember to breathe. <color=#FF0000>Don't ragequit</color>";
+							break;
+						case 'Knuxina':
+							addStr += '<color=#FFFF00>*sigh*</color>';
+							break;
+						case "GerbilSoft":
+							addStr += 'Quack.';
+							break;
+						case "ur mom":
+							addStr += 'People who mess with the lights deserve everything they get';
+							break;
+						case "Chris":
+							addStr += "Bought a Wondermega yet?";
+							break;
+						case "Giovanni":
+							addStr += 'It\'s still coming home';
+							break;
+						case "Hogeez":
+							addStr += "If you kill James, you lose your \n <color=#FFE751>Sonic</color> <color=#C31F80>C</color><color=#6EFFFF>o</color><color=#FFFD7D>l</color><color=#A946DE>o</color><color=#57C759>r</color><color=#F3F605>s</color> 100% save file";
+							break;
+					}
+					addStr += '</size>'
+				}
+				this.writeString(
+					this.shellcodeAddr + 0xd5,
+					'Ping: {0}ms' + addStr
+				);
 				writeMemory(
 					this.amongUs!.handle,
 					this.gameAssembly!.modBaseAddr + stringOffset,
