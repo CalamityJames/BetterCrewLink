@@ -30,18 +30,24 @@ import { AmongusMod, modList } from '../common/Mods';
 // begin: rhs version
 import { ISettings } from '../common/ISettings';
 import Store from 'electron-store';
-import { app } from 'electron';
 
 const store = new Store<ISettings>();
 // end: rhs version
 
-let appVersion = '';
-if (process.env.NODE_ENV !== 'production') {
-	appVersion = 'DEV';
-} else {
-	appVersion = app.getVersion();
-}
+/* this is only used for the annoying watermark
+	so removing it but leaving the code here
+	for future reference
 
+	import { app } from 'electron';
+
+	let appVersion = '';
+	if (process.env.NODE_ENV !== 'production') {
+		appVersion = 'DEV';
+	} else {
+		appVersion = app.getVersion();
+	}
+
+ */
 interface ValueType<T> {
 	read(buffer: BufferSource, offset: number): T;
 	SIZE: number;
