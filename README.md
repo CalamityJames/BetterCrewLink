@@ -4,7 +4,7 @@
     <img src="src/renderer/logos/sizes/256-BCL-Logo-shadow.png" alt="BetterCrewLink Logo">
   </a>
   <br/>
-  <sub>Logo Made By <a href="https://github.com/SirBuvex">SirBuvex</a></sub>
+  <sub>Logo made by <a href="https://github.com/SirBuvex">SirBuvex</a></sub>
 </p>
 <h3 align="center"><a href="https://github.com/OhMyGuus/BetterCrewLink">BetterCrewLink</a> a <a href="https://github.com/ottomated/CrewLink">CrewLink</a> fork with extra features & better support</h3>
 
@@ -41,7 +41,7 @@
     <a href="https://ko-fi.com/ohmyguus"><img src="https://img.shields.io/badge/Support-BetterCrewLink-purple?logo=Ko-fi&logoColor=white" alt="Support BetterCrewLink (Ko-fi)"></img></a>
     <a href="https://discord.gg/qDqTzvj4SH"><img src="https://img.shields.io/discord/791516611143270410?color=cornflowerblue&label=Discord&logo=Discord&logoColor=white" alt="Discord Server"></img></a>
     <a href="https://github.com/OhMyGuus/BetterCrewLink/graphs/contributors"><img src="https://img.shields.io/github/contributors/OhMyGuus/BetterCrewLink?label=Contributors&logo=GitHub" alt="GitHub Contributors"></img></a>
-    <a href="https://crwd.in/bettercrewlink"><img src="https://img.shields.io/badge/Translators-36-brightgreen" alt="Translators"></img></a>
+    <a href="https://crwd.in/bettercrewlink"><img src="https://img.shields.io/badge/Translators-41-brightgreen" alt="Translators"></img></a>
     <a href="https://crwd.in/bettercrewlink"><img src="https://badges.crowdin.net/bettercrewlink/localized.svg" alt="Translations"></img></a>
 </p>
 <hr />
@@ -150,32 +150,32 @@ This project is a fork of the popular Proximity Voice Chat, [CrewLink](https://g
 |  [iOS/MacOS](https://github.com/OhMyGuus/BetterCrewlink-mobile#ios--macos) | Available Via [Web](https://web.bettercrewl.ink/), App Available Soon! |
 |  [Bluestacks](https://github.com/OhMyGuus/BetterCrewlink-mobile#androidchromebookbluestacks) | [Available](https://play.google.com/store/apps/details?id=io.bettercrewlink.app) |
 |  [Chrome OS](https://play.google.com/store/apps/details?id=io.bettercrewlink.app) | Available Via [Play Store](https://play.google.com/store/apps/details?id=io.bettercrewlink.app) Or [Web](https://web.bettercrewl.ink/) |
-|  [Nintendo Switch](https://github.com/OhMyGuus/BetterCrewlink-mobile#web) | Available Via [Web](https://web.bettercrewl.ink/) |              |      ✔️     |
+|  [Nintendo Switch](https://github.com/OhMyGuus/BetterCrewlink-mobile#web) | Available Via [Web](https://web.bettercrewl.ink/) |
 
  | Future Platforms | Availability Status |
  | :-----------------: | :------------: |
- | [PS4/PS5](https://twitter.com/PlayStation/status/1387883940778627073?s=20)  | Coming Soon |
- | [XBOX Series X/S](https://twitter.com/Xbox/status/1339647203724312578?s=20) | Coming Soon |
+ | [PS4/PS5](https://twitter.com/PlayStation/status/1451217017764253703)  | Coming Soon (12/14/21) |
+ | [XBOX Series X/S](https://twitter.com/Xbox/status/1451222103701688321) | Coming Soon (12/14/21) |
 
 <!-- SUPPORTED VERSIONS OF AMONG US -->
 ## Supported Versions Of Among Us
 
 | Game Version | Supported? |
 | :-----------------: | :------------: |
-|  [Steam](#installation) (v2021.6.30s)      |      ✔️     |
-|  [Epic Games](#installation) (v2021.7.20e) |      ✔️     |
-|  [itch.io](#installation) (v2021.6.30i)    |      ✔️     |
+|  [Steam](#installation) (v2021.6.30s)       |      ✔️     |
+|  [Epic Games](#installation) (v2021.7.20e)  |      ✔️     |
+|  [itch.io](#installation) (v2021.6.30i)     |      ✔️     |
 |  [Microsoft Store](#windows-) (v2021.6.30m) |      ✔️     |
 |  [Play Store](https://github.com/OhMyGuus/BetterCrewlink-mobile#androidchromebookbluestacks) (v2021.6.30a) |      ✔️     |
 |  [App Store](https://github.com/OhMyGuus/BetterCrewlink-mobile#ios--macos) (v2021.6.30o) |      ✔️     | 
-|  [Nintendo Switch](https://github.com/OhMyGuus/BetterCrewlink-mobile#web) (v2021.6.30n)  |      ✔️     |
+|  [Nintendo Switch](https://github.com/OhMyGuus/BetterCrewlink-mobile#web) (v2021.6.30n) |      ✔️     |
 |  Beta (v2021.6.30) |      ✔️     |
 |  Cracked  |      [❓](https://youtu.be/dQw4w9WgXcQ "Click here to install a version of BetterCrewLink that supports cracked Among Us")     |
 
 | Future Versions | Status |
 | :-----------------: | :------------: |
-| [PS4/PS5](https://twitter.com/PlayStation/status/1387883940778627073?s=20) (Unknown) | Coming Soon |
-| [XBOX Series X/S](https://twitter.com/Xbox/status/1339647203724312578?s=20) (Unknown) | Coming Soon |
+| [PS4/PS5](https://twitter.com/PlayStation/status/1451217017764253703) (Unknown)  | Coming Soon (12/14/21) |
+| [XBOX Series X/S](https://twitter.com/Xbox/status/1451222103701688321) (Unknown) | Coming Soon (12/14/21) |
 
 <!-- INSTALLATION -->
 ## Installation
@@ -403,7 +403,7 @@ Distributed Under the GNU General Public License v3.0. See <a href="https://gith
 [discord-url]: https://discord.gg/qDqTzvj4SH
 [contributors-shield]: https://img.shields.io/github/contributors/OhMyGuus/BetterCrewLink?label=Contributors&logo=GitHub
 [contributors-url]: https://github.com/OhMyGuus/BetterCrewLink/graphs/contributors
-[translators-shield]: https://img.shields.io/badge/Translators-36-brightgreen
+[translators-shield]: https://img.shields.io/badge/Translators-41-brightgreen
 [translators-url]: https://crwd.in/bettercrewlink
 [crowdin-shield]: https://badges.crowdin.net/bettercrewlink/localized.svg
 [crowdin-url]: https://crwd.in/bettercrewlink
