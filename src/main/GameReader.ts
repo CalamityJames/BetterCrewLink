@@ -136,13 +136,13 @@ export default class GameReader {
 		if (pathLower.includes('?\\volume') || this.is_linux) {
 			return modList[0];
 		} else {
-			const dir = path.dirname(filePath);
+			let dir = path.dirname(filePath);
 			if (!fs.existsSync(path.join(dir, 'winhttp.dll')) || !fs.existsSync(path.join(dir, 'BepInEx\\plugins'))) {
 				return modList[0];
 			}
 			for (const file of fs.readdirSync(path.join(dir, 'BepInEx\\plugins'))) {
-				console.log(`MOD! ${file}`);
-				const mod = modList.find((o) => o.dllStartsWith && file.includes(o.dllStartsWith));
+				console.log(`MOD! ${file}`)
+				let mod = modList.find((o) => o.dllStartsWith && file.includes(o.dllStartsWith));
 				if (mod) return mod;
 			}
 			return modList[0];
@@ -395,7 +395,7 @@ export default class GameReader {
 				closedDoors,
 				currentServer: this.currentServer,
 				maxPlayers,
-				oldMeetingHud: this.oldMeetingHud,
+				oldMeetingHud: this.oldMeetingHud
 			};
 			//	const stateHasChanged = !equal(this.lastState, newState);
 			if (state !== GameState.MENU || this.oldGameState !== GameState.MENU) {
@@ -498,7 +498,7 @@ export default class GameReader {
 			this.offsets.signatures.serverManager.addressOffset
 		);
 		if (this.loadedMod.id === 'POLUS_GG') {
-			this.offsets.serverManager_currentServer[4] = 0x0c;
+			this.offsets.serverManager_currentServer[4] = 0x0C
 		}
 		this.colorsInitialized = false;
 		console.log('serverManager_currentServer', this.offsets.serverManager_currentServer[0].toString(16));
@@ -514,16 +514,15 @@ export default class GameReader {
 			// temp fix for older game until I added more sigs.. // 12/9
 			this.offsets = TempFixOffsets2(this.offsets);
 		}
-		if (innerNetClient === 0x1d17f2c) {
-			//6/15
+		if (innerNetClient === 0x1D17F2C) {//6/15
 			this.offsets = TempFixOffsets4(this.offsets);
 		}
 
-		if (innerNetClient === 0x1baa960) {
+		if (innerNetClient === 0x1BAA960) {
 			this.offsets = TempFixOffsets5(this.offsets);
 		}
 
-		if (innerNetClient === 0x1d9dbb4 || innerNetClient === 0x1e247c4) {
+		if (innerNetClient === 0x1D9DBB4 || innerNetClient === 0x1E247C4) {
 			// temp fix for older game until I added more sigs.. // 25/5
 			this.oldMeetingHud = true;
 			this.offsets = TempFixOffsets3(this.offsets);
@@ -626,7 +625,7 @@ export default class GameReader {
 		const modManagerLateUpdate = this.gameAssembly!.modBaseAddr + this.offsets.modLateUpdateFunc;
 		const shellCodeAddr_1 = shellCodeAddr + 0x300;
 		const relativeShellJMP_1 = shellCodeAddr_1 - (modManagerLateUpdate + 0x1) - 0x4;
-		const relativefixedJMP_1 = modManagerLateUpdate + 0x5 - (shellCodeAddr_1 + 0x1c) - 0x4;
+		const relativefixedJMP_1 = modManagerLateUpdate + 0x5 - (shellCodeAddr_1 + 0x1C) - 0x4;
 		const showModStampFunc = this.gameAssembly!.modBaseAddr + this.offsets.showModStampFunc;
 		const relativeShowModStamp = showModStampFunc + 0x6 - (shellCodeAddr_1 + 0x12) - 0x4;
 
@@ -646,7 +645,7 @@ export default class GameReader {
 			_compareAddr1, // 0x0
 			0x00,
 			0x74, // je 0x13
-			0x0c,
+			0x0C,
 			0xc6, // mov byte ptr [ShellcodeAddr + 0x30], 0x00
 			0x05,
 			_compareAddr4, // 0x0
@@ -654,16 +653,16 @@ export default class GameReader {
 			_compareAddr2, // 0xA3
 			_compareAddr1, // 0x0
 			0x00, // write 0x0
-			0xe9,
+			0xE9,
 			relativeShowModStamp & 0x000000ff,
 			(relativeShowModStamp & 0x0000ff00) >> 8,
 			(relativeShowModStamp & 0x00ff0000) >> 16,
 			(relativeShowModStamp & 0xff000000) >> 24,
 			0x53,
-			0x8b,
-			0xdc,
+			0x8B,
+			0xDC,
 			0x83,
-			0xec,
+			0xEC,
 			0x08,
 			0xe9, // jmp innerNet.InnerNetClient.FixedUpdate + 0x5
 			relativefixedJMP_1 & 0x000000ff,
@@ -817,14 +816,7 @@ export default class GameReader {
 	}
 
 	joinGame(code: string, server: string): boolean {
-		if (
-			!this.amongUs ||
-			!this.initializedWrite ||
-			server.length > 15 ||
-			!this.offsets ||
-			this.is_64bit ||
-			this.loadedMod.id === 'POLUS_GG'
-		) {
+		if (!this.amongUs || !this.initializedWrite || server.length > 15 || !this.offsets || this.is_64bit || this.loadedMod.id === "POLUS_GG") {
 			return false;
 		}
 		const innerNetClient = this.readMemory<number>(
@@ -973,7 +965,7 @@ export default class GameReader {
 	readDictionary(
 		address: number,
 		maxLen: number,
-		callback: (keyPtr: number, valPtr: number, index: number) => void
+		callback: (keyPtr: number, valPtr: number, index: number) => void,
 	): void {
 		const entries = this.readMemory<number>('ptr', address + (this.is_64bit ? 0x18 : 0xc));
 		let len = this.readMemory<number>('uint32', address + (this.is_64bit ? 0x20 : 0x10));
@@ -1016,10 +1008,14 @@ export default class GameReader {
 	}
 
 	IntToGameCode(input: number): string {
-		if (!input || input === 0) return '';
-		else if (input <= -1000) return this.IntToGameCodeV2Impl(input);
-		else if (input > 0 && this.loadedMod.id == 'POLUS_GG') return this.IntToGameCodeV1Impl(input);
-		else return '';
+		if (!input || input === 0)
+			return '';
+		else if (input <= -1000)
+			return this.IntToGameCodeV2Impl(input);
+		else if (input > 0 && this.loadedMod.id == "POLUS_GG")
+			return this.IntToGameCodeV1Impl(input);
+		else
+			return '';
 	}
 
 	IntToGameCodeV1Impl(input: number): string {
@@ -1043,9 +1039,7 @@ export default class GameReader {
 	}
 
 	gameCodeToInt(code: string): number {
-		return code.length === 4 && this.loadedMod.id === 'POLUS_GG'
-			? this.gameCodeToIntV1Impl(code)
-			: this.gameCodeToIntV2Impl(code);
+		return (code.length === 4 && this.loadedMod.id === "POLUS_GG") ? this.gameCodeToIntV1Impl(code) : this.gameCodeToIntV2Impl(code);
 	}
 
 	gameCodeToIntV1Impl(code: string): number {
