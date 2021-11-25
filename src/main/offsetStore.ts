@@ -63,6 +63,8 @@ export interface IOffsets {
 		remoteX: number[];
 		remoteY: number[];
 		roleTeam: number[];
+		nameText?: number[];
+		currentOutfit: number[];
 		outfit: {
 			colorId: number[];
 			playerName: number[];
@@ -188,7 +190,9 @@ export default {
 			offsets: [0, 0],
 			inVent: [0x44],
 			clientId: [0x28],
+			currentOutfit: [0x40],
 			roleTeam: [0x48],
+			nameText: [0x78, 0xD8],
 			outfit: {
 				colorId: [0x14],
 				hatId: [0x18],
@@ -311,7 +315,9 @@ export default {
 			offsets: [0, 0],
 			inVent: [0x38],
 			clientId: [0x1c],
+			currentOutfit: [0x34],
 			roleTeam: [0x3C],
+			nameText: [0x58, 0x80],
 			outfit: {
 				colorId: [0x0c],
 				hatId: [0x10],
@@ -486,6 +492,8 @@ export function TempFixOffsets5(offsetsOld: IOffsets): IOffsets {
 		inVent: [0x31],
 		clientId: [0x1c],
 		roleTeam: [0xff],
+		currentOutfit: [0xff],
+
 		outfit: {
 			colorId: [0xff],
 			hatId: [0xff],

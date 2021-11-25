@@ -20,6 +20,8 @@ export interface overlayPlayer {
 	isLocal: boolean;
 	bugged: boolean;
 	connected: boolean;
+	realColor: string[]
+	shiftedColor: number;
 }
 
 export interface ObsVoiceState {

@@ -159,6 +159,7 @@ export default class GameReader {
 	}
 
 	checkProcessDelay = 0;
+	isLocalGame = false;
 	loop(): string | null {
 		if (this.checkProcessDelay-- <= 0) {
 			this.checkProcessDelay = 30;
@@ -210,12 +211,15 @@ export default class GameReader {
 				state === GameState.MENU
 					? -1
 					: this.readMemory<number>('int32', innerNetClient, this.offsets.innerNetClient.gameId);
+
+
 			this.gameCode =
 				state === GameState.MENU
 					? ''
 					: lobbyCodeInt === this.lastState.lobbyCodeInt
-					? this.gameCode
-					: this.IntToGameCode(lobbyCodeInt);
+						? this.gameCode
+						: this.IntToGameCode(lobbyCodeInt);
+
 
 			// if (DEBUG) {
 			// 	this.gameCode = 'oof';
@@ -230,7 +234,7 @@ export default class GameReader {
 
 			const hostId = this.readMemory<number>('uint32', innerNetClient, this.offsets.innerNetClient.hostId);
 			const clientId = this.readMemory<number>('uint32', innerNetClient, this.offsets.innerNetClient.clientId);
-
+			this.isLocalGame = lobbyCodeInt === 32; // is local game
 			let lightRadius = 1;
 			let comsSabotaged = false;
 			let currentCamera = CameraLocation.NONE;
@@ -245,7 +249,7 @@ export default class GameReader {
 			) {
 				this.readCurrentServer();
 			}
-			if (this.gameCode && playerCount) {
+			if ((this.gameCode || this.isLocalGame) && playerCount) {
 				for (let i = 0; i < Math.min(playerCount, 40); i++) {
 					const { address, last } = this.offsetAddress(playerAddrPtr, this.offsets.player.offsets);
 					if (address === 0) continue;
@@ -256,6 +260,10 @@ export default class GameReader {
 						continue;
 					}
 
+					if (this.isLocalGame && player.clientId == hostId) {
+						this.gameCode = ((player.nameHash % 99999)).toString();
+
+					}
 					if (player.isLocal) {
 						localPlayer = player;
 						this.localPlayerName = player.name;
@@ -528,8 +536,9 @@ export default class GameReader {
 			this.offsets = TempFixOffsets4(this.offsets);
 		}
 
-		if (innerNetClient === 0x1baa960 || innerNetClient == 0x1D17F2C) {
+		if (innerNetClient === 0x1baa960 || innerNetClient == 0x1D17F2C || innerNetClient == 29777072) {
 			this.offsets = TempFixOffsets5(this.offsets);
+			this.disableWriting = true;
 		}
 
 		if (innerNetClient === 0x1d9dbb4 || innerNetClient === 0x1e247c4) {
@@ -894,7 +903,7 @@ export default class GameReader {
 		for (let i = 0; i < colorLength; i++) {
 			const playerColor = this.readMemory<number>('uint32', PlayerColorsPtr, [this.offsets!.playerAddrPtr + i * 0x4]);
 			const shadowColor = this.readMemory<number>('uint32', ShadowColorsPtr, [this.offsets!.playerAddrPtr + i * 0x4]);
-			if(i == 0 && playerColor != 4279308742){
+			if (i == 0 && playerColor != 4279308742) {
 				return;
 			}
 			if (playerColor === 4278190080) {
@@ -1111,12 +1120,14 @@ export default class GameReader {
 
 		let x = this.readMemory<number>('float', data.objectPtr, positionOffsets[0]);
 		let y = this.readMemory<number>('float', data.objectPtr, positionOffsets[1]);
+		let currentOutfit = this.readMemory<number>('uint32', data.objectPtr, this.offsets.player.currentOutfit);
 		const isDummy = this.readMemory<boolean>('boolean', data.objectPtr, this.offsets.player.isDummy);
 		let name = 'error';
+		let shiftedColor = -1;
 		if (data.hasOwnProperty('name')) {
 			name = this.readString(data.name).split(/<.*?>/).join('');
 		} else {
-			this.readDictionary(data.outfitsPtr, 2, (k, v, i) => {
+			this.readDictionary(data.outfitsPtr, 6, (k, v, i) => {
 				const key = this.readMemory<number>('int32', k);
 				const val = this.readMemory<number>('ptr', v);
 				if (key === 0 && i == 0) {
@@ -1126,15 +1137,26 @@ export default class GameReader {
 					data.hat = this.readString(this.readMemory<number>('ptr', val, this.offsets!.player.outfit.hatId));
 					data.skin = this.readString(this.readMemory<number>('ptr', val, this.offsets!.player.outfit.skinId));
 					data.visor = this.readString(this.readMemory<number>('ptr', val, this.offsets!.player.outfit.visorId));
-					return;
+					if (currentOutfit == 0 || currentOutfit > 10)
+						return;
+				} else if (key === currentOutfit) {
+					shiftedColor = this.readMemory<number>('uint32', val, this.offsets!.player.outfit.colorId); // 0x14
 				}
 			});
 			const roleTeam = this.readMemory<number>('uint32', data.rolePtr, this.offsets!.player.roleTeam)
 			data.impostor = roleTeam;
+
+			if (this.offsets!.player.nameText && shiftedColor == -1 && (this.loadedMod.id == "THE_OTHER_ROLES" || this.loadedMod.id == "THE_OTHER_ROLES_GM")) {
+				let nameText = this.readMemory<number>('ptr', data.objectPtr, this.offsets!.player.nameText);
+				var nameText_name = this.readString(nameText);
+				if (nameText_name != name) {
+					shiftedColor = data.color;
+				}
+			}
 		}
 		name = name.split(/<.*?>/).join('');
 		let bugged = false;
-		if (x === undefined || y === undefined || data.disconnected != 0 || data.color < 0 || data.color > this.playercolors.length ) {
+		if (x === undefined || y === undefined || data.disconnected != 0 || data.color < 0 || data.color > this.playercolors.length) {
 			x = 9999;
 			y = 9999;
 			bugged = true;
@@ -1161,6 +1183,7 @@ export default class GameReader {
 			isDead: data.dead == 1,
 			taskPtr: data.taskPtr,
 			objectPtr: data.objectPtr,
+			shiftedColor,
 			bugged,
 			inVent: this.readMemory<number>('byte', data.objectPtr, this.offsets.player.inVent) > 0,
 			isLocal,

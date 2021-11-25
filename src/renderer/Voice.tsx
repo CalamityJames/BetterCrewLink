@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import io, { Socket } from 'socket.io-client';
 import Avatar from './Avatar';
-import { GameStateContext, LobbySettingsContext, SettingsContext } from './contexts';
+import { GameStateContext, LobbySettingsContext, PlayerColorContext, SettingsContext } from './contexts';
 import {
 	AmongUsState,
 	GameState,
@@ -227,6 +227,8 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 	const lobbySettingsRef = useRef(lobbySettings);
 	const maxDistanceRef = useRef(2);
 	const gameState = useContext(GameStateContext);
+	const playerColors = useContext(PlayerColorContext);
+
 	const hostRef = useRef({
 		map: MapType.UNKNOWN,
 		mobileRunning: false,
@@ -590,7 +592,9 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 						visorId: o.visorId,
 						disconnected: o.disconnected,
 						isLocal: o.isLocal,
+						shiftedColor : o.shiftedColor,
 						bugged: o.bugged,
+						realColor: playerColors[o.colorId],
 						usingRadio: o.clientId === impostorRadioClientId.current && myPlayer?.isImpostor,
 						connected:
 							(playerSocketIdsRef.current[o.clientId] &&
@@ -685,6 +689,8 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 	useEffect(() => {
 		lobbySettingsRef.current = lobbySettings;
 	}, [lobbySettings]);
+
+
 
 	// Set dead player data
 	useEffect(() => {
@@ -866,14 +872,12 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 									? settingsRef.current.microphoneGain / 100
 									: 1;
 							}
-							connectionStuff.current.socket?.emit('VAD', true);
 							setTalking(true);
 						},
 						onVoiceStop: () => {
 							if (microphoneGain && settingsRef.current.micSensitivityEnabled) {
 								microphoneGain.gain.value = 0;
 							}
-							connectionStuff.current.socket?.emit('VAD', false);
 							setTalking(false);
 						},
 						noiseCaptureDuration: 0,
@@ -1269,6 +1273,18 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 		}
 	}, [connect?.connect, gameState?.lobbyCode, connected]);
 
+	useEffect(() => {
+		if (myPlayer?.shiftedColor != -1) {
+			connectionStuff.current.socket?.emit('VAD', false);
+			setTalking(false)
+		}
+	}, [myPlayer?.shiftedColor])
+
+	useEffect(() => {
+		if (myPlayer?.shiftedColor == -1 || !talking)
+			connectionStuff.current.socket?.emit('VAD', talking);
+	}, [talking])
+
 	// Connect to P2P negotiator, when game mode change
 	useEffect(() => {
 		if (
@@ -1353,7 +1369,7 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 								deafened={deafenedState}
 								muted={mutedState}
 								player={myPlayer}
-								borderColor="#2ecc71"
+								borderColor={myPlayer?.shiftedColor == -1 ? '#2ecc71' : 'gray'}
 								connectionState={connected ? 'connected' : 'disconnected'}
 								isUsingRadio={myPlayer?.isImpostor && impostorRadioClientId.current === myPlayer.clientId}
 								talking={talking}
