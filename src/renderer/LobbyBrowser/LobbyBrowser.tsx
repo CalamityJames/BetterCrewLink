@@ -61,10 +61,9 @@ const servers: {
 	'50.116.1.42': 'North America',
 	'172.105.251.170': 'Europe',
 	'139.162.111.196': 'Asia',
-	'161.35.248.138': 'Polus.gg NA (East)',
-	'164.90.246.64': 'Polus.gg NA (West)',
-	'138.68.119.239': 'Polus.gg Europe',
 	'192.241.154.115': 'skeld.net',
+	'185.7.80.9': 'TOU Master',
+	'78.47.142.18': 'TOR Server',
 };
 
 function sortLobbies(a: PublicLobby, b: PublicLobby) {
@@ -147,11 +146,11 @@ export default function lobbyBrowser({ t }) {
 					aria-labelledby="alert-dialog-slide-title"
 					aria-describedby="alert-dialog-slide-description"
 				>
-					<DialogTitle id="alert-dialog-slide-title">{t('lobbybrowser.code')}</DialogTitle>
+					<DialogTitle id="alert-dialog-slide-title">Lobby information</DialogTitle>
 					<DialogContent>
 						<DialogContentText id="alert-dialog-slide-description">
 							{code.split('\n').map((i, key) => {
-								return <span key={key}>{i}</span>;
+								return <div key={key}>{i}</div>;
 							})}
 						</DialogContentText>
 					</DialogContent>
@@ -209,7 +208,8 @@ export default function lobbyBrowser({ t }) {
 															row.id,
 															(state: number, codeOrError: string, server: string, publicLobby: PublicLobby) => {
 																if (state === 0) {
-																	ipcRenderer.send(IpcHandlerMessages.JOIN_LOBBY, codeOrError, server);
+																	setCode(`${t('lobbybrowser.code')}: ${codeOrError} \n Region: ${server}`);
+																	// ipcRenderer.send(IpcHandlerMessages.JOIN_LOBBY, codeOrError, server);
 																} else {
 																	setCode(`Error: ${codeOrError}`);
 																}
@@ -217,7 +217,7 @@ export default function lobbyBrowser({ t }) {
 														);
 													}}
 												>
-													Join
+													Show code
 												</Button>
 												{/* <Button variant="contained" color="secondary" style={{ marginLeft: '5px' }}>
 												report
