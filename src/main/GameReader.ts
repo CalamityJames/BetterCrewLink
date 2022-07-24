@@ -878,7 +878,17 @@ export default class GameReader {
 							addStr += "Remember to breathe. <color=#FF0000>Don't ragequit</color>";
 							break;
 						case 'Knuxina':
+						case 'Knux':
 							addStr += '<color=#FFFF00>*sigh*</color>';
+							break;
+						case 'Benji':
+						case 'Byadiscool':
+							addStr += 'Give me your Analogue Pocket.';
+							break;
+						case 'Dax':
+						case 'Katter':
+						case "DaxKatter":
+							addStr += '¿ɹǝpun uʍop puɐl ɐ ɯoɹɟ ǝɯoɔ noʎ op';
 							break;
 						case 'GerbilSoft':
 							addStr += 'Quack.';
