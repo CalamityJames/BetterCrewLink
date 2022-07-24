@@ -16,7 +16,7 @@ import {
 import Struct from 'structron';
 import { IpcOverlayMessages, IpcRendererMessages } from '../common/ipc-messages';
 import { GameState, AmongUsState, Player } from '../common/AmongUsState';
-import { fetchOffsetLookup, fetchOffsetsJson, IOffsets, IOffsetsLookup } from './offsetStore';
+import { fetchOffsetLookup, fetchOffsets, IOffsets, IOffsetsLookup } from './offsetStore';
 import Errors from '../common/Errors';
 import { CameraLocation, MapType } from '../common/AmongusMap';
 import { GenerateAvatars, numberToColorHex } from './avatarGenerator';
@@ -119,10 +119,10 @@ export default class GameReader {
 					break;
 				} catch (e) {
 					console.log('ERROR:', e);
-					if (processOpen && e.toString() === 'Error: unable to find process') {
+					if (processOpen && String(e) === 'Error: unable to find process') {
 						error = Errors.OPEN_AS_ADMINISTRATOR;
 					} else {
-						error = e.toString();
+						error = String(e);
 					}
 					this.amongUs = null;
 				}
@@ -168,7 +168,7 @@ export default class GameReader {
 				await this.checkProcessOpen();
 			} catch (e) {
 				this.checkProcessDelay = 0
-				return e.toString();
+				return String(e);
 			}
 		}
 		if (
@@ -465,9 +465,9 @@ export default class GameReader {
 		console.log("broadcastVersion: ", broadcastVersion)
 
 		if (offsetLookups.versions[broadcastVersion]) {
-			this.offsets = await fetchOffsetsJson(this.is_64bit, offsetLookups.versions[broadcastVersion].file);
+			this.offsets = await fetchOffsets(this.is_64bit, offsetLookups.versions[broadcastVersion].file, offsetLookups.versions[broadcastVersion].offsetsVersion);
 		} else {
-			this.offsets = await fetchOffsetsJson(this.is_64bit, offsetLookups.versions["default"].file); // can't find file for this client, return default
+			this.offsets = await fetchOffsets(this.is_64bit, offsetLookups.versions["default"].file, offsetLookups.versions["default"].offsetsVersion); // can't find file for this client, return default
 		}
 
 		this.disableWriting = this.offsets.disableWriting;
@@ -968,9 +968,9 @@ export default class GameReader {
 		const ShadowColorsPtr = this.readMemory<number>('ptr', palletePtr, this.offsets!.palette_shadowColor);
 
 		const colorLength = this.readMemory<number>('int', ShadowColorsPtr, this.offsets!.playerCount);
-		console.log('Initializecolors', colorLength);
+		console.log('Initializecolors', colorLength, this.loadedMod.id);
 
-		if (!colorLength || colorLength <= 0 || colorLength > 300) {
+		if (!colorLength || colorLength <= 0 || colorLength > 300 || ((this.loadedMod.id == "THE_OTHER_ROLES" || this.loadedMod.id == "THE_OTHER_ROLES_GM") && colorLength <= 18)) {
 			return;
 		}
 
@@ -1222,13 +1222,13 @@ export default class GameReader {
 			const roleTeam = this.readMemory<number>('uint32', data.rolePtr, this.offsets!.player.roleTeam)
 			data.impostor = roleTeam;
 
-			if (this.offsets!.player.nameText && shiftedColor == -1 && (this.loadedMod.id == "THE_OTHER_ROLES" || this.loadedMod.id == "THE_OTHER_ROLES_GM")) {
-				let nameText = this.readMemory<number>('ptr', data.objectPtr, this.offsets!.player.nameText);
-				var nameText_name = this.readString(nameText);
-				if (nameText_name != name) {
-					shiftedColor = data.color;
-				}
-			}
+		//	if (this.offsets!.player.nameText && shiftedColor == -1 && (this.loadedMod.id == "THE_OTHER_ROLES" || this.loadedMod.id == "THE_OTHER_ROLES_GM")) {
+		//		let nameText = this.readMemory<number>('ptr', data.objectPtr, this.offsets!.player.nameText);
+		//		var nameText_name = this.readString(nameText);
+		//		if (nameText_name != name) {
+		//			shiftedColor = data.color;
+		//		}
+		//	}
 		}
 		name = name.split(/<.*?>/).join('');
 		let bugged = false;

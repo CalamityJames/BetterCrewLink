@@ -1,4 +1,4 @@
-import { ipcMain } from 'electron';
+import { app, ipcMain } from 'electron';
 import GameReader from './GameReader';
 // import iohook from 'iohook';
 import { keyboardWatcher } from 'node-keyboard-watcher';
@@ -114,7 +114,7 @@ ipcMain.handle(IpcHandlerMessages.START_HOOK, async (event) => {
 	}
 });
 
-ipcMain.on('reload', async (lobbybrowser) => {
+ipcMain.on('reload', async (_, lobbybrowser) => {
 	if (!lobbybrowser) {
 		global.mainWindow?.reload();
 	}
@@ -122,7 +122,7 @@ ipcMain.on('reload', async (lobbybrowser) => {
 	//	global.overlay?.reload();
 });
 
-ipcMain.on('minimize', async (lobbybrowser) => {
+ipcMain.on('minimize', async (_, lobbybrowser) => {
 	if (!lobbybrowser) {
 		global.mainWindow?.minimize();
 	}
@@ -130,6 +130,14 @@ ipcMain.on('minimize', async (lobbybrowser) => {
 	//	global.overlay?.reload();
 });
 
+ipcMain.handle("getlocale", () => {
+	return app.getLocale();
+});
+
+ipcMain.on('relaunch', async () => {
+	app.relaunch();  
+	app.exit();
+});
 // GenerateAvatars().then(() => console.log("done generate")).catch((e) => console.error(e));
 
 const keycodeMap = {

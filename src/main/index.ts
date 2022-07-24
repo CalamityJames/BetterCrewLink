@@ -77,7 +77,7 @@ function createMainWindow() {
 	let crewlinkVersion: string;
 	if (isDevelopment) {
 		crewlinkVersion = '0.0.0';
-		//window.loadURL("http://google.nl")
+		//window.loadURL("https://google.com")
 
 		window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}?version=DEV&view=app`);
 	} else {
@@ -95,7 +95,7 @@ function createMainWindow() {
 		);
 	}
 	//window.webContents.userAgent = `CrewLink/${crewlinkVersion} (${process.platform})`;
-	window.webContents.userAgent = `CrewLink/2.0.1 (win32)`;
+	window.webContents.userAgent = `BetterCrewLink/3.0.1 (win32)`;
 
 	window.on('closed', () => {
 		try {
@@ -166,7 +166,7 @@ function createLobbyBrowser() {
 			})
 		);
 	}
-	window.webContents.userAgent = `CrewLink/2.0.1 (win32)`;
+	window.webContents.userAgent = `BetterCrewLink/3.0.1 (win32)`;
 	console.log('Opened app version: ', crewlinkVersion);
 	return window;
 }
@@ -216,7 +216,7 @@ function createOverlay() {
 	}
 	overlay.setIgnoreMouseEvents(true);
 	overlayWindow.attachTo(overlay, 'Among Us');
-
+	overlay.setBackgroundColor('#00000000');
 	return overlay;
 }
 
@@ -224,11 +224,13 @@ const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
 	app.quit();
 } else {
+	autoUpdater.autoDownload = false;
 	autoUpdater.checkForUpdates();
-	autoUpdater.on('update-available', () => {
+	autoUpdater.on('update-available', (info: UpdateInfo) => {
 		try {
 			global.mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
 				state: 'available',
+				info: info,
 			});
 		} catch (e) {
 			/* Empty block */
@@ -254,15 +256,8 @@ if (!gotTheLock) {
 			/*empty*/
 		}
 	});
-	autoUpdater.on('update-downloaded', (info: UpdateInfo) => {
-		try {
-			global.mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
-				state: 'downloaded',
-				info,
-			});
-		} catch (e) {
-			/*empty*/
-		}
+	autoUpdater.on('update-downloaded', () => {
+		autoUpdater.quitAndInstall();
 	});
 
 	// quit application when all windows are closed
@@ -283,6 +278,7 @@ if (!gotTheLock) {
 	});
 
 	app.on('activate', () => {
+		console.log("ACTIVATE???")
 		// on macOS it is common to re-create a window even after all windows have been closed
 		if (global.mainWindow === null) {
 			global.mainWindow = createMainWindow();
@@ -335,7 +331,7 @@ if (!gotTheLock) {
 	});
 
 	ipcMain.on('update-app', () => {
-		autoUpdater.quitAndInstall();
+		autoUpdater.downloadUpdate();
 	});
 
 	ipcMain.on(IpcHandlerMessages.OPEN_LOBBYBROWSER, () => {
@@ -348,28 +344,36 @@ if (!gotTheLock) {
 	});
 
 	ipcMain.on('enableOverlay', async (_event, enable) => {
-		try {
-			if (enable) {
-				if (!global.overlay) {
-					global.overlay = createOverlay();
-				}
-				overlayWindow.show();
-			} else {
-				overlayWindow.hide();
-				if (global.overlay?.closable) {
-					overlayWindow.stop();
+		setTimeout(
+			() => {
+
+				try {
+					if (enable) {
+						if (!global.overlay) {
+							global.overlay = createOverlay();
+						}
+						overlayWindow.show();
+					} else {
+						overlayWindow.hide();
+						if (global.overlay?.closable) {
+							overlayWindow.stop();
+							global.overlay?.close();
+							global.overlay = null;
+						}
+					}
+				} catch (exception) {
+					global.overlay?.hide();
 					global.overlay?.close();
-					global.overlay = null;
 				}
-			}
-		} catch (exception) {
-			global.overlay?.hide();
-			global.overlay?.close();
-		}
+			},
+			1000
+		)
 	});
 
-	ipcMain.on('enableOverlay', async (_event, enable) => {
+	ipcMain.on('setAlwaysOnTop', async (_event, enable) => {
+		console.log("SETALWAYSONTOP?")
 		if (global.mainWindow) {
+			console.log("SETALWAYSONTOP?1")
 			global.mainWindow.setAlwaysOnTop(enable, 'screen-saver');
 		}
 	});
