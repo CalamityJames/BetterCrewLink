@@ -53,6 +53,7 @@
 			"microphone_sens_warning": "Jika Anda menyetel sensitivitas lebih rendah, itu mungkin tidak berfungsi.",
 			"mastervolume": "Volume Utama",
 			"crewvolume": "Volume Kru sebagai Hantu",
+			"ghostvolumeasimpostor": "Volume Hantu sebagai Penipu",
 			"test_speaker_start": "Uji Speaker",
 			"test_speaker_stop": "Hentikan Uji Speaker"
 		},
@@ -95,10 +96,13 @@
 			"mobilehost": "Host Seluler",
 			"vad_enabled": "VAD Diaktifkan",
 			"hardware_acceleration": "Akselerasi Perangkat Keras",
+			"hardware_acceleration_warning": "Ini menonaktifkan Akselerasi Perangkat Keras (yang bisa mempertinggi pemakaian CPU)",
 			"vad_enabled_warning": "Anda tidak akan melihat siapa yang berbicara jika dimatikan.",
 			"echocancellation": "Penghilangan Gema",
 			"noiseSuppression": "Peredaman Kebisingan",
-			"spatial_audio": "Audio Spasial"
+			"spatial_audio": "Audio Spasial",
+			"oldsampledebug": "Debug Laju Sampel",
+			"oldsampledebug_warning": "Ini adalah fungsi uji coba, aktifkanlah HANYA ketika diminta untuk melakukannya."
 		},
 		"streaming": {
 			"title": "Penyetelan Streaming",
@@ -118,6 +122,12 @@
 	"lobbybrowser": {
 		"header": "Lobi-lobi Publik",
 		"code": "Kode Lobi",
+		"code_tooltips": {
+			"in_progress": "Permainan Sedang Berlangsung",
+			"full_lobby": "Lobi Penuh",
+			"incompatible": "Modifikasi Tidak Kompatibel",
+			"and": "dan"
+		},
 		"list": {
 			"title": "Judul",
 			"host": "Host",

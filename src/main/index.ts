@@ -9,7 +9,7 @@ import { format as formatUrl } from 'url';
 import './hook';
 import { overlayWindow } from 'electron-overlay-window';
 import { initializeIpcHandlers, initializeIpcListeners } from './ipc-handlers';
-import { IpcRendererMessages /*AutoUpdaterState*/, IpcHandlerMessages } from '../common/ipc-messages';
+import { IpcRendererMessages, IpcHandlerMessages } from '../common/ipc-messages';
 import { ProgressInfo, UpdateInfo } from 'builder-util-runtime';
 import { protocol } from 'electron';
 import Store from 'electron-store';
@@ -20,6 +20,7 @@ import { GenerateHat } from './avatarGenerator';
 const args = require('minimist')(process.argv); // eslint-disable-line
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const devTools = (isDevelopment || args.dev === 1) && true;
+const appVersion: string = isDevelopment? "DEV" : autoUpdater.currentVersion.version;
 
 declare global {
 	namespace NodeJS {
@@ -36,9 +37,14 @@ global.mainWindow = null;
 global.overlay = null;
 const store = new Store<ISettings>();
 app.commandLine.appendSwitch('disable-pinch');
-// app.disableHardwareAcceleration();
+
 if (platform() === 'linux' || !store.get('hardware_acceleration', true)) {
 	app.disableHardwareAcceleration();
+
+}
+
+if(platform() === 'linux'){
+	app.commandLine.appendSwitch('disable-gpu-sandbox');
 }
 
 function createMainWindow() {
@@ -74,20 +80,15 @@ function createMainWindow() {
 		})
 	}
 
-	let crewlinkVersion: string;
 	if (isDevelopment) {
-		crewlinkVersion = '0.0.0';
-		//window.loadURL("https://google.com")
-
 		window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}?version=DEV&view=app`);
 	} else {
-		crewlinkVersion = autoUpdater.currentVersion.version;
 		window.loadURL(
 			formatUrl({
 				pathname: joinPath(__dirname, 'index.html'),
 				protocol: 'file',
 				query: {
-					version: autoUpdater.currentVersion.version,
+					version: appVersion,
 					view: 'app',
 				},
 				slashes: true,
@@ -95,7 +96,7 @@ function createMainWindow() {
 		);
 	}
 	//window.webContents.userAgent = `CrewLink/${crewlinkVersion} (${process.platform})`;
-	window.webContents.userAgent = `BetterCrewLink/3.0.1 (win32)`;
+	window.webContents.userAgent = `BetterCrewLink/${appVersion} (win32)`;
 
 	window.on('closed', () => {
 		try {
@@ -117,7 +118,7 @@ function createMainWindow() {
 			window.focus();
 		});
 	});
-	console.log('Opened app version: ', crewlinkVersion);
+	console.log('Opened app version: ', appVersion);
 	return window;
 }
 
@@ -148,26 +149,23 @@ function createLobbyBrowser() {
 	// 		mode: 'detach',
 	// 	});
 	// }
-	let crewlinkVersion: string;
 	if (isDevelopment) {
-		crewlinkVersion = '0.0.0';
 		window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}?version=DEV&view=lobbies`);
 	} else {
-		crewlinkVersion = autoUpdater.currentVersion.version;
 		window.loadURL(
 			formatUrl({
 				pathname: joinPath(__dirname, 'index.html'),
 				protocol: 'file',
 				query: {
-					version: autoUpdater.currentVersion.version,
+					version: appVersion,
 					view: 'lobbies',
 				},
 				slashes: true,
 			})
 		);
 	}
-	window.webContents.userAgent = `BetterCrewLink/3.0.1 (win32)`;
-	console.log('Opened app version: ', crewlinkVersion);
+	window.webContents.userAgent = `BetterCrewLink/${appVersion} (win32)`;
+	console.log('Opened app version: ', appVersion);
 	return window;
 }
 
@@ -199,7 +197,7 @@ function createOverlay() {
 
 	if (isDevelopment) {
 		overlay.loadURL(
-			`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}?version=${autoUpdater.currentVersion.version}&view=overlay`
+			`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}?version=${appVersion}&view=overlay`
 		);
 	} else {
 		overlay.loadURL(
@@ -207,7 +205,7 @@ function createOverlay() {
 				pathname: joinPath(__dirname, 'index.html'),
 				protocol: 'file',
 				query: {
-					version: autoUpdater.currentVersion.version,
+					version: appVersion,
 					view: 'overlay',
 				},
 				slashes: true,

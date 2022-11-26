@@ -18,27 +18,25 @@ import { ipcRenderer } from 'electron';
 import VAD from './vad';
 import { ISettings, playerConfigMap, ILobbySettings } from '../common/ISettings';
 import { IpcRendererMessages, IpcMessages, IpcOverlayMessages, IpcHandlerMessages } from '../common/ipc-messages';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import makeStyles from '@mui/styles/makeStyles';
 import SupportLink from './SupportLink';
-import Divider from '@material-ui/core/Divider';
+import Divider from '@mui/material/Divider';
 import { validateClientPeerConfig } from './validateClientPeerConfig';
 // @ts-ignore
 import reverbOgx from 'arraybuffer-loader!../../static/sounds/reverb.ogx'; // @ts-ignore
 import radioOnSound from '../../static/sounds/radio_on.wav'; // @ts-ignore
-// import radioBeep2 from '../../static/sounds/radio_beep2.wav';
 
 import { CameraLocation, AmongUsMaps, MapType } from '../common/AmongusMap';
 import { ObsVoiceState } from '../common/ObsOverlay';
-// import { poseCollide } from '../common/ColliderMap';
 import Footer from './Footer';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import VolumeOff from '@material-ui/icons/VolumeOff';
-import VolumeUp from '@material-ui/icons/VolumeUp';
-import Mic from '@material-ui/icons/Mic';
-import MicOff from '@material-ui/icons/MicOff';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import VolumeOff from '@mui/icons-material/VolumeOff';
+import VolumeUp from '@mui/icons-material/VolumeUp';
+import Mic from '@mui/icons-material/Mic';
+import MicOff from '@mui/icons-material/MicOff';
 import adapter from 'webrtc-adapter';
 import { VADOptions } from './vad';
 import { pushToTalkOptions } from './settings/SettingsStore';
@@ -152,6 +150,7 @@ const useStyles = makeStyles((theme) => ({
 		textAlign: 'center',
 		fontSize: 20,
 		whiteSpace: 'nowrap',
+		maxWidth: '115px',
 	},
 	code: {
 		fontFamily: "'Source Code Pro', monospace",
@@ -360,7 +359,7 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 						applyEffect(gain, reverb, destination, other);
 					}
 					collided = false;
-					endGain = 0.1;
+					endGain = settings.ghostVolumeAsImpostor / 100;
 				} else {
 					if (other.isDead && !me.isDead) {
 						endGain = 0;
@@ -532,6 +531,8 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 	useEffect(() => {
 		if (!connectionStuff.current.instream) return;
 		connectionStuff.current.instream.getAudioTracks()[0].enabled =
+			!connectionStuff.current.deafened &&
+			!connectionStuff.current.muted &&
 			settings.pushToTalkMode !== pushToTalkOptions.PUSH_TO_TALK;
 		connectionStuff.current.pushToTalkMode = settings.pushToTalkMode;
 	}, [settings.pushToTalkMode]);
@@ -762,7 +763,9 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 		// (async function anyNameFunction() {
 		let currentLobby = '';
 		// Connect to voice relay server
-		connectionStuff.current.socket = io(settings.serverURL);
+		connectionStuff.current.socket = io(settings.serverURL,{
+			transports: ['websocket']
+		 });
 
 		const { socket } = connectionStuff.current;
 
@@ -938,7 +941,7 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 			ipcRenderer.on(IpcRendererMessages.TOGGLE_MUTE, connectionStuff.current.toggleMute);
 			ipcRenderer.on(IpcRendererMessages.PUSH_TO_TALK, (_: unknown, pressing: boolean) => {
 				if (connectionStuff.current.pushToTalkMode === pushToTalkOptions.VOICE) return;
-				if (!connectionStuff.current.deafened) {
+				if (!connectionStuff.current.deafened && !connectionStuff.current.muted) {
 					inStream.getAudioTracks()[0].enabled =
 						connectionStuff.current.pushToTalkMode === pushToTalkOptions.PUSH_TO_TALK ? pressing : !pressing;
 				}
@@ -1094,7 +1097,6 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 			});
 
 			socket.on('signal', ({ data, from, client }: { data: Peer.SignalData; from: string, client: Client }) => {
-				//console.log('onsignal', JSON.stringify(data));
 				if (data.hasOwnProperty('mobilePlayerInfo')) {
 					// eslint-disable-line
 					const mobiledata = data as mobileHostInfo;
@@ -1107,22 +1109,15 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 					}
 					return;
 				}
-				//console.log('ONSIGNAL', data, client);
 				let connection: Peer.Instance;
 				if (!socketClientsRef.current[from]) {
 					console.warn('SIGNAL FROM UNKOWN SOCKET..');
 					return;
 				}
 				if (data.hasOwnProperty('type')) {
-					// if (data.type === 'offer' && peerConnections[from]) {
-					// 	console.log("Got offer with already a connection")
-					// }
 					if (peerConnections[from] && data.type !== 'offer') {
-						//	console.log('Send to existing peer 1');
 						connection = peerConnections[from];
 					} else {
-						//	console.log('Send to new peer 1');
-
 						connection = createPeerConnection(from, false, client);
 					}
 					connection.signal(data);
@@ -1222,7 +1217,7 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 					gain = playerVolume === undefined ? gain : gain * playerVolume;
 
 					if (myPlayer.isDead && !player.isDead) {
-						gain = gain * (settings.ghostVolume / 100);
+						gain = gain * (settings.crewVolumeAsGhost / 100);
 					}
 					gain = gain * (settings.masterVolume / 100);
 				}
@@ -1432,7 +1427,7 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 						className={classes.otherplayers}
 						alignItems="flex-start"
 						alignContent="flex-start"
-						justify="flex-start"
+						justifyContent="flex-start"
 					>
 						{otherPlayers.map((player) => {
 							const peer = playerSocketIdsRef.current[player.clientId];

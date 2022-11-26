@@ -16,7 +16,7 @@
 			"private_talk_invents": "Private Talk in Vents",
 			"comms_sabotage_audio": "Comms Sabotage Disables Voice",
 			"hear_through_cameras": "Hear Through Cameras",
-			"ghost_only": "Only Ghosts Can Talk/Hear",
+			"ghost_only": "Only Ghosts can Talk/Hear",
 			"ghost_only_warning": "This disables the sound for alive players.",
 			"ghost_only_warning2": "Ghost can talk only enabled.",
 			"meetings_only": "Meetings/Lobby Only",
@@ -53,6 +53,7 @@
 			"microphone_sens_warning": "Ha az érzékenységet lejjebb veszed akkor lehet hogy nem fog működni a mikrofon.",
 			"mastervolume": "Fő Hangerő",
 			"crewvolume": "Az emberek hangereje a szellemeknek",
+			"ghostvolumeasimpostor": "Ghost Volume as Impostor",
 			"test_speaker_start": "Hangszóró tesztelése",
 			"test_speaker_stop": "Hangszóró tesztelésének leállítása"
 		},
@@ -65,7 +66,7 @@
 		},
 		"overlay": {
 			"title": "Overlay",
-			"always_on_top": "BetterCrewLink On Top",
+			"always_on_top": "BetterCrewLink on Top",
 			"enabled": "Enable Overlay",
 			"compact": "Compact Overlay",
 			"meeting": "Meeting Overlay",
@@ -95,10 +96,13 @@
 			"mobilehost": "Mobile Host",
 			"vad_enabled": "VAD Enabled",
 			"hardware_acceleration": "Hardveres gyorsítás",
-			"vad_enabled_warning": "You won't see who's talking if deactivate.",
+			"hardware_acceleration_warning": "This disables Hardware Acceleration (which can increase CPU usage)",
+			"vad_enabled_warning": "You won't see who's talking if disabled.",
 			"echocancellation": "Visszhang csökkentés",
 			"noiseSuppression": "Zajcsökkentés",
-			"spatial_audio": "Spatial Audio"
+			"spatial_audio": "Spatial Audio",
+			"oldsampledebug": "Samplerate Debug",
+			"oldsampledebug_warning": "This is a test function ONLY enabled when asked."
 		},
 		"streaming": {
 			"title": "Streaming Settings",
@@ -118,6 +122,12 @@
 	"lobbybrowser": {
 		"header": "Publikus Lobbik",
 		"code": "Lobby Kód",
+		"code_tooltips": {
+			"in_progress": "Game in Progress",
+			"full_lobby": "Lobby is Full",
+			"incompatible": "Incompatible Mods",
+			"and": "and"
+		},
 		"list": {
 			"title": "Cím",
 			"host": "Hoszt",
@@ -131,7 +141,7 @@
 		"confirm": "Megerősít",
 		"cancel": "Mégse",
 		"close": "Bezárás",
-		"exit": "Exit Settings to Apply Changes",
+		"exit": "Exit settings to apply changes",
 		"public_lobby": "Publikus Lobbik",
 		"delete": "Törlés",
 		"file_select": "Fájl kiválasztása"
@@ -139,11 +149,11 @@
 	"game": {
 		"menu": "MENÜ",
 		"open": "Megnyitás ez által:",
-		"open_error": "Manuális mentés",
+		"open_error": "Start the Among Us manually.",
 		"waiting": "Waiting for Among Us",
 		"error": "HIBA",
 		"error_admin": "Couldn't connect to Among Us.\nPlease re-open BetterCrewLink as Administrator.",
-		"error_platform": "No Platform Detected",
+		"error_platform": "No platform detected",
 		"error_unsupport": "Your version of Among Us is unsupported by BetterCrewLink."
 	},
 	"platform": {

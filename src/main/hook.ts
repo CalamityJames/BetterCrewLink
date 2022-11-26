@@ -1,11 +1,9 @@
 import { app, ipcMain } from 'electron';
 import GameReader from './GameReader';
-// import iohook from 'iohook';
 import { keyboardWatcher } from 'node-keyboard-watcher';
 import Store from 'electron-store';
 import { ISettings } from '../common/ISettings';
-import { IpcHandlerMessages, IpcRendererMessages, IpcSyncMessages } from '../common/ipc-messages';
-// import { GenerateAvatars } from './avatarGenerator';
+import { IpcHandlerMessages, IpcMessages, IpcRendererMessages, IpcSyncMessages } from '../common/ipc-messages';
 
 const store = new Store<ISettings>();
 
@@ -57,23 +55,37 @@ ipcMain.on(IpcSyncMessages.GET_INITIAL_STATE, (event) => {
 	event.returnValue = gameReader.lastState;
 });
 
+ipcMain.handle(IpcMessages.REQUEST_MOD, () => {
+	return gameReader.loadedMod.id;
+});
+
 ipcMain.handle(IpcHandlerMessages.START_HOOK, async (event) => {
 	if (!readingGame) {
 		readingGame = true;
+		let speaking: number = 0
 		resetKeyHooks();
 
 		keyboardWatcher.on('keydown', (keyId: number) => {
 			if (keyCodeMatches(pushToTalkShortcut!, keyId)) {
-				event.sender.send(IpcRendererMessages.PUSH_TO_TALK, true);
+				speaking += 1;
 			}
-			if (keyCodeMatches(impostorRadioShortcut!, keyId)) {
+			if (keyCodeMatches(impostorRadioShortcut!, keyId) && gameReader.lastState.players?.find((value) => {return value.clientId === gameReader.lastState.clientId})?.isImpostor) {
+				speaking += 1;
 				event.sender.send(IpcRendererMessages.IMPOSTOR_RADIO, true);
+			}
+
+			// Cover weird cases which shouldn't happen but just in case
+			if (speaking > 2) {
+				speaking = 2;
+			}
+			if (speaking) {
+				event.sender.send(IpcRendererMessages.PUSH_TO_TALK, true);
 			}
 		});
 
 		keyboardWatcher.on('keyup', (keyId: number) => {
 			if (keyCodeMatches(pushToTalkShortcut!, keyId)) {
-				event.sender.send(IpcRendererMessages.PUSH_TO_TALK, false);
+				speaking -= 1;
 			}
 			if (keyCodeMatches(deafenShortcut!, keyId)) {
 				event.sender.send(IpcRendererMessages.TOGGLE_DEAFEN);
@@ -81,8 +93,17 @@ ipcMain.handle(IpcHandlerMessages.START_HOOK, async (event) => {
 			if (keyCodeMatches(muteShortcut!, keyId)) {
 				event.sender.send(IpcRendererMessages.TOGGLE_MUTE);
 			}
-			if (keyCodeMatches(impostorRadioShortcut!, keyId)) {
+			if (keyCodeMatches(impostorRadioShortcut!, keyId) && gameReader.lastState.players?.find((value) => {return value.clientId === gameReader.lastState.clientId})?.isImpostor) {
+				speaking -= 1;
 				event.sender.send(IpcRendererMessages.IMPOSTOR_RADIO, false);
+			}
+
+			// Cover weird cases which shouldn't happen but just in case
+			if (speaking < 0) {
+				speaking = 0;
+			}
+			if (!speaking) {
+				event.sender.send(IpcRendererMessages.PUSH_TO_TALK, false);
 			}
 		});
 
@@ -119,7 +140,6 @@ ipcMain.on('reload', async (_, lobbybrowser) => {
 		global.mainWindow?.reload();
 	}
 	global.lobbyBrowser?.reload();
-	//	global.overlay?.reload();
 });
 
 ipcMain.on('minimize', async (_, lobbybrowser) => {
@@ -127,7 +147,6 @@ ipcMain.on('minimize', async (_, lobbybrowser) => {
 		global.mainWindow?.minimize();
 	}
 	global.lobbyBrowser?.minimize();
-	//	global.overlay?.reload();
 });
 
 ipcMain.handle("getlocale", () => {
@@ -138,7 +157,6 @@ ipcMain.on('relaunch', async () => {
 	app.relaunch();  
 	app.exit();
 });
-// GenerateAvatars().then(() => console.log("done generate")).catch((e) => console.error(e));
 
 const keycodeMap = {
 	Space: 0x20,

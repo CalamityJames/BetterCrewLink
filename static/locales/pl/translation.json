@@ -27,7 +27,7 @@
 				"change_settings": "Zmień informacje o poczekalni",
 				"title": "Nazwa",
 				"enabled": "Poczekalnia jest publiczna",
-				"mods": "Moderatorzy",
+				"mods": "Modyfikacje",
 				"language": "Język",
 				"enable_warning": "Włączenie tego sprawi, że Twoja poczekalnia stanie się publiczna dla innych użytkowników BetterCrewLink!",
 				"ban_warning": "Nieodpowiednia nazwa spowoduje otrzymanie blokady od BetterCrewLink."
@@ -53,6 +53,7 @@
 			"microphone_sens_warning": "Jeśli ustawisz czułość niżej, mikrofon może nie działać.",
 			"mastervolume": "Głośność główna",
 			"crewvolume": "Głośność żywych graczy dla duchów",
+			"ghostvolumeasimpostor": "Ghost Volume as Impostor",
 			"test_speaker_start": "Przetestuj dźwięk",
 			"test_speaker_stop": "Zatrzymaj test dźwięku"
 		},
@@ -95,10 +96,13 @@
 			"mobilehost": "Host mobilny",
 			"vad_enabled": "VAD włączone",
 			"hardware_acceleration": "Przyspieszenie sprzętowe",
+			"hardware_acceleration_warning": "To ustawienie wyłącza akcelerację sprzętową (co może zwiększyć użycie procesora)",
 			"vad_enabled_warning": "Nie będziesz widział kto mówi, jeśli jest wyłączone.",
 			"echocancellation": "Tłumienie echa",
 			"noiseSuppression": "Tłumienie hałasu",
-			"spatial_audio": "Dźwięk przestrzenny"
+			"spatial_audio": "Dźwięk przestrzenny",
+			"oldsampledebug": "Samplerate Debug",
+			"oldsampledebug_warning": "This is a test function ONLY enabled when asked."
 		},
 		"streaming": {
 			"title": "Ustawienia streamingu",
@@ -118,11 +122,17 @@
 	"lobbybrowser": {
 		"header": "Publiczne poczekalnie",
 		"code": "Kod poczekalni",
+		"code_tooltips": {
+			"in_progress": "Rozgrywka w toku",
+			"full_lobby": "Poczekalnia jest pełna",
+			"incompatible": "Niekompatybilne modyfikacje",
+			"and": "i"
+		},
 		"list": {
 			"title": "Nazwa",
 			"host": "Gospodarz",
 			"players": "Gracze",
-			"mods": "Moderatorzy",
+			"mods": "Modyfikacje",
 			"language": "Język"
 		}
 	},

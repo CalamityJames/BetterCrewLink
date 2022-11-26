@@ -19,7 +19,8 @@ export interface ISettings {
 	meetingOverlay: boolean;
 
 	localLobbySettings: ILobbySettings;
-	ghostVolume: number;
+	ghostVolumeAsImpostor: number;
+	crewVolumeAsGhost: number;
 	masterVolume: number;
 	microphoneGain: number;
 	microphoneGainEnabled: boolean;
@@ -40,8 +41,6 @@ export interface ISettings {
 
 	launchPlatform: GamePlatform | string;
 	customPlatforms: GamePlatformMap;
-
-	useRHSJokes: boolean;
 }
 
 export interface ILobbySettings {
